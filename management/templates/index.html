@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Break Management</title>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+</head>
+<body>
+
+    <div class="header-container">
+        <h1>Break Management</h1>
+    </div>
+<center>
+{% if user.break_time and user.lunch_time %}
+    <h2>Вы на обеде и перерыве</h2>
+{% elif user.break_time %}
+    <h2>Вы на перерыве</h2>
+    {% if past > 10 %}
+    <h3 style="color:red">{{past}} минута прошла</h3>
+    <h1>Muammo chiqaryapsiz brodar. Ishga qayting!!!</h1>
+    {% else %}
+    <h3 style="color:red">{{past}} минута прошла</h3>
+    {% endif %}
+{% elif user.lunch_time %}
+    <h2>Вы на обеде</h2>
+    {% if past > 30 %}
+    <h3 style="color:red">{{past}} минута прошла</h3>
+    <h1>Muammo chiqaryapsiz brodar. Ishga qayting!!!</h1>
+    {% else %}
+    <h3 style="color:red">{{past}} минута прошла</h3>
+    {% endif %}
+{% else %}
+    <h2>Вы работаете</h2>
+    <h3 style="color:red">{{past}} минута прошла</h3>
+{% endif %}
+</center>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error-message show">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="logout-button">Выйти</a>
+        {% else %}
+            <div class="button-group">
+                <a href="{% url 'login' %}">Логин</a>
+                <a href="{% url 'register' %}">Регистер</a>
+            </div>
+        {% endif %}
+
+        <div class="button-group">
+            {% if user.break_time or user.lunch_time %}
+                <a href="{% url 'work' user.id %}">Разблокироваться</a>
+            {% else %}
+                <a href="{% url 'break_time' %}">Технический перерыв</a>
+                <a href="{% url 'lunch_time' %}">Обед</a>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <div class="header">
+                <p class="head_p">Технический перерыв</p>
+            </div>
+            {% if breakers %}
+                {% for i in breakers %}
+                    <div class="TEX1">
+                        <h1>Имя: {{i.first_name}}</h1>
+                        {% if user.is_staff %}
+                        <a href={% url 'work' i.id %} class="chek1"></a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="TEX1 empty">
+                    <h1>Пусто</h1>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <div class="header">
+                <p class="head_p">Обед</p>
+            </div>
+            {% if lunchers %}
+                {% for i in lunchers %}
+                    <div class="TEX1">
+                        <h1>Имя: {{i.first_name}}</h1>
+                        {% if user.is_staff %}
+                        <a href={% url 'work' i.id %} class="chek1"></a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="TEX1 empty">
+                    <h1>Пусто</h1>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="footer">
+        <code>Created by Dilmuhammad Abdukodirov and Muhammadibrohim Nizomov</code>
+    </div>
+</body>
+</html>
+
+    <script>
+
+        setTimeout(function(){
+            location.reload();
+        }, 3000);
+    </script>
